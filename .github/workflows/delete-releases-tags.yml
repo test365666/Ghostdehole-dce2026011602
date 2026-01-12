@@ -38,3 +38,4 @@ jobs:
             curl -X DELETE -H "Authorization: token $TOKEN" \
               https://api.github.com/repos/$REPO/git/refs/tags/$tag
           done
+

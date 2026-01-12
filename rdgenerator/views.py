@@ -273,7 +273,7 @@ def check_for_file(request):
     status = gh_run.status
 
     #if file_exists:
-    if status == "Success":
+    if status == "成功！":
         return render(request, 'generated.html', {'filename': filename, 'uuid':uuid, 'platform':platform})
     else:
         return render(request, 'waiting.html', {'filename':filename, 'uuid':uuid, 'status':status, 'platform':platform})

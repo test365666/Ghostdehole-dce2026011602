@@ -104,8 +104,8 @@ jobs:
             api_server = secrets.get('apiServer', '').strip()
             api_server = api_server.rstrip('/')
 
-            rdgen_value = str(secrets.get('rdgen', 'false')).lower()    
-            if rdgen_value == "true":
+            dce_value = str(secrets.get('dce', 'false')).lower()    
+            if dce_value == "true":
               status_url = "${{ secrets.GENURL }}/updategh"
             else:
               status_url = f"{api_server}/api/updategh"

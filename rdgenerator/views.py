@@ -244,7 +244,7 @@ def generator_view(request):
                 "urlLink":urlLink,
                 "downloadLink":downloadLink,
                 "delayFix": 'true' if delayFix else 'false',
-                "rdgen":'true',
+                "dce":'true',
                 "cycleMonitor": 'true' if cycleMonitor else 'false',
                 "xOffline": 'true' if xOffline else 'false',
                 "removeNewVersionNotif": 'true' if removeNewVersionNotif else 'false',

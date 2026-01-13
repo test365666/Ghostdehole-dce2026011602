@@ -666,12 +666,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ inputs.filename }}
-          name: Release ${{ inputs.filename }}
+          tag_name: ${{ env.filename }}
+          target_commitish: ${{ github.sha }}
+          name: Release ${{ env.filename }}
           prerelease: true
           files: |
-            ./SignOutput/${{ inputs.filename }}.exe
-            ./SignOutput/${{ inputs.filename }}.msi
+            ./SignOutput/${{ env.filename }}.exe
+            ./SignOutput/${{ env.filename }}.msi
 
       - name: send file to dce server
         if: ${{ env.dce == 'true' }}

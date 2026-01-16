@@ -207,7 +207,7 @@ def main():
         replace_in_file(worktree_dir / "flutter" / "lib" / "common.dart", "launchUrl(Uri.parse('https://rustdesk.com'));", f"launchUrl(Uri.parse('{url_link}'));", required=False)
         replace_in_file(worktree_dir / "flutter" / "lib" / "desktop" / "pages" / "desktop_setting_page.dart", "launchUrlString('https://rustdesk.com');", f"launchUrlString('{url_link}');", required=False)
         replace_in_file(worktree_dir / "flutter" / "lib" / "desktop" / "pages" / "desktop_setting_page.dart", "launchUrlString('https://rustdesk.com/privacy.html')", f"launchUrlString('{url_link}/privacy.html')", required=False)
-        replace_in_file(worktree_dir / "flutter" / "lib" / "mobile" / "pages" / "settings_page.dart", "const url = 'https://rustdesk.com/';", f\"const url = '{url_link}';\", required=False)
+        replace_in_file(worktree_dir / "flutter" / "lib" / "mobile" / "pages" / "settings_page.dart", "const url = 'https://rustdesk.com/';", f"const url = '{url_link}';", required=False)
         replace_in_file(worktree_dir / "flutter" / "lib" / "mobile" / "pages" / "settings_page.dart", "launchUrlString('https://rustdesk.com/privacy.html')", f"launchUrlString('{url_link}/privacy.html')", required=False)
         replace_in_file(worktree_dir / "flutter" / "lib" / "desktop" / "pages" / "install_page.dart", "https://rustdesk.com/privacy.html", f"{url_link}/privacy.html", required=False)
 

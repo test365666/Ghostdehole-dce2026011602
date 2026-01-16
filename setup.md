@@ -65,7 +65,7 @@
 cd /opt
 
 # Clone your dce repo, change Ghostdehole to your github username
-git clone https://github.com/Ghostdehole/dce.git
+git clone https://github.com/test365666/Ghostdehole-dce2026011602.git
 
 # Open the dce directory
 cd dce

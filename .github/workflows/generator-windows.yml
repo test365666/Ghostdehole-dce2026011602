@@ -270,10 +270,10 @@ jobs:
       - name: allow custom.txt
         continue-on-error: true
         run: |
-          Invoke-WebRequest -Uri https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/allowCustom.py -OutFile allowCustom.py
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/allowCustom.py -OutFile allowCustom.py
           python allowCustom.py
           # Remove Setup Server Tip
-          Invoke-WebRequest -Uri https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/removeSetupServerTip.diff -OutFile removeSetupServerTip.diff
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/removeSetupServerTip.diff -OutFile removeSetupServerTip.diff
           git apply removeSetupServerTip.diff
 
       - name: Install LLVM and Clang
@@ -410,14 +410,14 @@ jobs:
         continue-on-error: true
         if: env.cycleMonitor == 'true'
         run: |
-          Invoke-WebRequest -Uri https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/cycle_monitor.diff -OutFile cycle_monitor.diff
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/cycle_monitor.diff -OutFile cycle_monitor.diff
           git apply cycle_monitor.diff
 
       - name: use X for offline display instead of orange circle
         continue-on-error: true
         if: env.xOffline == 'true'
         run: |
-          Invoke-WebRequest -Uri https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/xoffline.diff -OutFile xoffline.diff
+          Invoke-WebRequest -Uri https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/xoffline.diff -OutFile xoffline.diff
           git apply xoffline.diff
 
       - name: removeNewVersionNotif

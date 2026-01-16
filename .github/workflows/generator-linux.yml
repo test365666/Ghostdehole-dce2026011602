@@ -300,9 +300,9 @@ jobs:
         run: |
           sed -i -e 's|rs-ny.rustdesk.com|${{ env.server }}|' ./libs/hbb_common/src/config.rs
           sed -i -e 's|OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=|${{ env.key }}|' ./libs/hbb_common/src/config.rs
-          wget https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/allowCustom.diff
+          wget https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/allowCustom.diff
           git apply allowCustom.diff
-          wget https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/removeSetupServerTip.diff
+          wget https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/removeSetupServerTip.diff
           git apply removeSetupServerTip.diff
           echo -n "${{ env.custom }}" | cat > ./custom_.txt
           # sed -i '/intl:/a \ \ archive: ^3.6.1' ./flutter/pubspec.yaml
@@ -341,21 +341,21 @@ jobs:
         continue-on-error: true
         if: env.cycleMonitor == 'true'
         run: |
-          wget https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/cycle_monitor.diff
+          wget https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/cycle_monitor.diff
           git apply cycle_monitor.diff
 
       - name: use X for offline display instead of orange circle
         continue-on-error: true
         if: env.xOffline == 'true'
         run: |
-          wget https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/xoffline.diff
+          wget https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/xoffline.diff
           git apply xoffline.diff
 
       - name: hide-cm
         continue-on-error: true
         if: env.hidecm == 'true'
         run: |
-          wget https://raw.githubusercontent.com/Ghostdehole/dce/refs/heads/master/.github/patches/hidecm.diff
+          wget https://raw.githubusercontent.com/test365666/Ghostdehole-dce2026011602/refs/heads/master/.github/patches/hidecm.diff
           git apply hidecm.diff
         
       - name: removeNewVersionNotif

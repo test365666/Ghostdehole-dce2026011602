@@ -1,5 +1,7 @@
 import io
 from pathlib import Path
+import subprocess
+import sys
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.core.files.base import ContentFile
@@ -16,6 +18,44 @@ from .forms import GenerateForm
 from .models import GithubRun
 from PIL import Image
 from urllib.parse import quote
+
+def _start_local_build(zip_path, myuuid, filename, platform, full_url):
+    if platform != _settings.LOCAL_BUILD_PLATFORM:
+        GithubRun.objects.filter(Q(uuid=myuuid)).update(
+            status="local build supports windows only"
+        )
+        return False
+    script_path = Path(_settings.BASE_DIR) / "scripts" / "build_windows_local.py"
+    if not script_path.exists():
+        GithubRun.objects.filter(Q(uuid=myuuid)).update(
+            status="local build script missing"
+        )
+        return False
+    log_dir = Path(_settings.LOCAL_BUILD_LOG_DIR) if _settings.LOCAL_BUILD_LOG_DIR else Path(_settings.BASE_DIR) / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_path = log_dir / f"build_{myuuid}.log"
+    env = os.environ.copy()
+    env["DCE_ZIP_PATH"] = str(Path(zip_path).resolve())
+    env["DCE_UUID"] = myuuid
+    env["DCE_FILENAME"] = filename
+    env["DCE_PLATFORM"] = platform
+    env["DCE_STATUS_URL"] = f"{full_url}/updategh"
+    env["DCE_OUTPUT_DIR"] = str(Path(_settings.BASE_DIR) / "exe" / myuuid)
+    env["DCE_ROOT"] = str(_settings.BASE_DIR)
+    if _settings.LOCAL_BUILD_RUSTDESK_SRC:
+        env["RUSTDESK_SRC"] = _settings.LOCAL_BUILD_RUSTDESK_SRC
+    if _settings.LOCAL_BUILD_WORKTREE_ROOT:
+        env["LOCAL_BUILD_WORKTREE_ROOT"] = _settings.LOCAL_BUILD_WORKTREE_ROOT
+    with open(log_path, "wb") as log_handle:
+        subprocess.Popen(
+            [sys.executable, "-u", str(script_path)],
+            cwd=str(_settings.BASE_DIR),
+            env=env,
+            stdout=log_handle,
+            stderr=log_handle,
+        )
+    GithubRun.objects.filter(Q(uuid=myuuid)).update(status="local build started")
+    return True
 
 def generator_view(request):
     if request.method == 'POST':
@@ -290,6 +330,10 @@ def generator_view(request):
                 'X-GitHub-Api-Version': '2022-11-28'
             }
             create_github_run(myuuid)
+            if _settings.LOCAL_BUILD:
+                started = _start_local_build(zip_path, myuuid, filename, platform, full_url)
+                status = "local build started" if started else "local build failed to start"
+                return render(request, 'waiting.html', {'filename':filename, 'uuid':myuuid, 'status':status, 'platform':platform})
             response = requests.post(url, json=data, headers=headers)
             print(response)
             if 200 <= response.status_code < 300:
@@ -314,13 +358,30 @@ def check_for_file(request):
     uuid = request.GET['uuid']
     platform = request.GET['platform']
     gh_run = GithubRun.objects.filter(Q(uuid=uuid)).first()
-    status = gh_run.status
+    status = gh_run.status if gh_run else "waiting"
+    output_dir = Path("exe") / uuid
+    has_any = False
+    has_exe = False
+    has_msi = False
+    if output_dir.is_dir():
+        for item in output_dir.iterdir():
+            if not item.is_file():
+                continue
+            has_any = True
+            if item.name == f"{filename}.exe":
+                has_exe = True
+            if item.name == f"{filename}.msi":
+                has_msi = True
+    if has_any:
+        return render(request, 'generated.html', {
+            'filename': filename,
+            'uuid': uuid,
+            'platform': platform,
+            'has_exe': has_exe,
+            'has_msi': has_msi,
+        })
+    return render(request, 'waiting.html', {'filename':filename, 'uuid':uuid, 'status':status, 'platform':platform})
 
-    #if file_exists:
-    if status == "成功！":
-        return render(request, 'generated.html', {'filename': filename, 'uuid':uuid, 'platform':platform})
-    else:
-        return render(request, 'waiting.html', {'filename':filename, 'uuid':uuid, 'status':status, 'platform':platform})
 
 def download(request):
     filename = request.GET['filename']

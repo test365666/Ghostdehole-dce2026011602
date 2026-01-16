@@ -15,6 +15,22 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+def _load_env_file(path):
+    try:
+        with open(path, "r", encoding="ascii") as handle:
+            for raw_line in handle:
+                line = raw_line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                key, sep, value = line.partition("=")
+                if not sep:
+                    continue
+                os.environ.setdefault(key.strip(), value.strip())
+    except FileNotFoundError:
+        return
+
+_load_env_file(BASE_DIR / ".env.local")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -28,6 +44,12 @@ GHBRANCH = os.environ.get("GHBRANCH",'master')
 ZIP_PASSWORD = os.environ.get("ZIP_PASSWORD",'insecure')
 PROTOCOL = os.environ.get("PROTOCOL", 'https')
 REPONAME = os.environ.get("REPONAME", 'dce')
+
+LOCAL_BUILD = os.environ.get("LOCAL_BUILD", "false").lower() in ("1", "true", "yes")
+LOCAL_BUILD_PLATFORM = os.environ.get("LOCAL_BUILD_PLATFORM", "windows")
+LOCAL_BUILD_RUSTDESK_SRC = os.environ.get("RUSTDESK_SRC", "")
+LOCAL_BUILD_WORKTREE_ROOT = os.environ.get("LOCAL_BUILD_WORKTREE_ROOT", "")
+LOCAL_BUILD_LOG_DIR = os.environ.get("LOCAL_BUILD_LOG_DIR", "")
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

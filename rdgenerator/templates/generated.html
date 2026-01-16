@@ -127,8 +127,15 @@
         <h2 class="success-text">客户端构建成功</h2>
         <div class="download-section">
             {% if platform == 'windows' %}
+                {% if has_exe %}
                 <a href='/download?filename={{filename}}.exe&uuid={{uuid}}' class="download-link">Download {{filename}}.exe</a>
+                {% endif %}
+                {% if has_msi %}
                 <a href='/download?filename={{filename}}.msi&uuid={{uuid}}' class="download-link">Download {{filename}}.msi</a>
+                {% endif %}
+                {% if not has_exe and not has_msi %}
+                <p>No files generated.</p>
+                {% endif %}
             {% elif platform == 'windows-x86' %}
                 <a href='/download?filename={{filename}}.exe&uuid={{uuid}}' class="download-link">Download {{filename}}.exe</a>
             {% elif platform == 'linux' %}
